@@ -28,7 +28,7 @@ app.get('/', (req, res) => {
 
 // Serve login page
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, '..', 'Frontend', 'login.html'));
+  res.sendFile(path.join(__dirname, '..', 'Frontend', 'index.html'));
 });
 
 // Register
