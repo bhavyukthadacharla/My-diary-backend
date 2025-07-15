@@ -126,12 +126,18 @@ app.get('/getMyPosts', async (req, res) => {
 app.delete('/deletePost', async (req, res) => {
   const postID = req.query.postID;
 
-  if (!postID) return res.status(400).json({ message: 'Post ID is required' });
-
+  if (!postID) {
+    console.log("❌ No postID received");
+    return res.status(400).json({ message: 'Post ID is required' });
+  }
+  
   try {
     const result = await Post.findByIdAndDelete(postID);
-    if (!result) return res.status(404).json({ message: 'Post not found' });
-
+    if (!result) {
+      console.log("❌ Post not found in DB:", postID);
+      return res.status(404).json({ message: 'Post not found' });
+    }
+    
     console.log(`🗑️ Deleted post with ID: ${postID}`);
     return res.status(200).json({ message: 'Post deleted successfully' });
   } catch (err) {
