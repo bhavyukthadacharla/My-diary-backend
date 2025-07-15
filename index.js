@@ -34,25 +34,34 @@ app.get('/', (req, res) => {
 // Register
 app.post('/registerUser', async (req, res) => {
   const { email, password } = req.body;
-  if (!email || !password)
+  console.log("📥 Incoming registration:", req.body);
+
+  if (!email || !password) {
+    console.log("❌ Missing email or password");
     return res.status(400).json({ message: 'Email and password required' });
+  }
 
   try {
     const existingUser = await User.findOne({ email });
-    if (existingUser)
+    if (existingUser) {
+      console.log("⚠️ User already exists:", email);
       return res.status(409).json({ message: 'User already exists' });
+    }
 
     const hashedPassword = await bcrypt.hash(password, 10);
     const user = new User({ email, hashedPassword });
-    await user.save();
 
+    await user.save();
     console.log('✅ Registered user:', email);
+
     return res.status(200).json({ message: 'Registered successfully' });
+
   } catch (err) {
-    console.error('❌ Registration error:', err);
-    return res.status(500).json({ message: 'Registration failed' });
+    console.error('❌ Registration error:', err.message);
+    return res.status(500).json({ message: 'Registration failed: ' + err.message });
   }
 });
+
 
 // Login
 app.post('/userLogin', async (req, res) => {
